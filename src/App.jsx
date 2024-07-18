@@ -1,9 +1,37 @@
+import { useEffect, useState } from "react"
 import "./App.css"
 
 function App() {
+	const [navBackgroundColor, setNavBackgroundColor] = useState("#0f0f0f")
+
+	useEffect(() => {
+		const handleScroll = () => {
+			const divs = document.querySelectorAll(".content-div")
+			const navbar = document.querySelector("nav")
+
+			for (let i = 0; i < divs.length; i++) {
+				const div = divs[i]
+				const rect = div.getBoundingClientRect()
+				const navbarBottom = navbar.getBoundingClientRect().bottom
+
+				if (rect.top <= navbarBottom && rect.bottom >= navbarBottom) {
+					const backgroundColor = window.getComputedStyle(div).backgroundColor
+					setNavBackgroundColor(backgroundColor)
+					break
+				}
+			}
+		}
+
+		window.addEventListener("scroll", handleScroll)
+
+		return () => {
+			window.removeEventListener("scroll", handleScroll)
+		}
+	}, [])
+
 	return (
 		<div className="App">
-			<nav>Navbar</nav>
+			<nav style={{ backgroundColor: navBackgroundColor }}>Navbar</nav>
 
 			<div className="content-div" style={{ height: "80vh" }}>
 				Content 1
